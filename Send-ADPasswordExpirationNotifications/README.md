@@ -23,8 +23,8 @@ In the script, you can edit different variables :
 
 **- Example 1 - User notification**
 
-![User notification](https://github.com/it-connect-fr/PowerShell-ActiveDirectory/Send-ADPasswordExpirationNotifications/Images/Send-ADPasswordExpirationNotifications-Notif1.png)
+![User notification](https://github.com/it-connect-fr/PowerShell-ActiveDirectory/blob/main/Send-ADPasswordExpirationNotifications/Images/Send-ADPasswordExpirationNotifications-Notif1.png)
 
 **- Examples 2 - Admin notification (if enabled) - Summary**
 
-![Admin notification](https://github.com/it-connect-fr/PowerShell-ActiveDirectory/Send-ADPasswordExpirationNotifications/Images/Send-ADPasswordExpirationNotifications-Notif2.png)
+![Admin notification](https://github.com/it-connect-fr/PowerShell-ActiveDirectory/blob/main/Send-ADPasswordExpirationNotifications/Images/Send-ADPasswordExpirationNotifications-Notif2.png)
