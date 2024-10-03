@@ -14,6 +14,7 @@
 	EMAIL:	florian.burnel@it-connect.fr
 	VERSION HISTORY:
         1.0   14/05/2024
+        1.1   18/07/2024
 
 #>
 
@@ -42,8 +43,8 @@ function Get-ADUserLastLogon {
 
     Foreach($TargetUser in $TargetUsersList){
 
-    # Initialiser le LastLogon sur $null comme point de départ
-    $TargetUserLastLogon = $null
+        # Initialiser le LastLogon sur $null comme point de départ
+        $TargetUserLastLogon = $null
 
         Foreach($DC in $DCList){
 
@@ -79,6 +80,7 @@ function Get-ADUserLastLogon {
         }
 
         Write-Host "lastLogon de $TargetUser : $TargetUserLastLogon"
+        Clear-Variable -Name "TargetUserLastLogon"
     }
 
     return $LastLogonTab
