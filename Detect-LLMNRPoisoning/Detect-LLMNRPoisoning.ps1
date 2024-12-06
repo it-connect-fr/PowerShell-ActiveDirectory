@@ -12,24 +12,24 @@
     1.0 - Initial version.
 
 .NOTES
-    Filename: Manage-IPv6.ps1
-    Creation Date: 08/2024
+    Filename: Detect-LLMNRPoisoning.ps1
+    Creation Date: 11/2024
 #>
 
-# Paramètres
-# Afficher les résultats dans le terminal
+# ParamÃ¨tres
+# Afficher les rÃ©sultats dans le terminal
 $TerminalOutput = $True 
 # Nom de la source pour les logs Windows
 $logSource = "LLMNR Attack Detection" 
-# Log Windows où les évènements seront écrits
+# Log Windows oÃ¹ les Ã©vÃ¨nements seront Ã©crits
 $eventLog = "Application" 
-# ID de l'évènement dans les logs Windows
+# ID de l'Ã©vÃ¨nement dans les logs Windows
 $eventID = 10001 
 # Temps minimal d'attente (en secondes)
 $MinWaitTime = 1
 # Temps maximal d'attente (en secondes)
 $MaxWaitTime = 10 
-# Liste de noms à tester
+# Liste de noms Ã  tester
 $hostnames = @("DSN121", "Imrpimante", "ActieDirector", "DNSS-Server", "File--server")
 
 function Write-EventLogV2 {
@@ -41,13 +41,13 @@ function Write-EventLogV2 {
           $evtSource="Script-2"
           )
 
-    # Charge la source d'événement dans le journal si elle n'est pas déjà chargée.
-    # Cette opération échouera si la source d'événement est déjà affectée à un autre journal.
+    # Charge la source d'Ã©vÃ©nement dans le journal si elle n'est pas dÃ©jÃ  chargÃ©e.
+    # Cette opÃ©ration Ã©chouera si la source d'Ã©vÃ©nement est dÃ©jÃ  affectÃ©e Ã  un autre journal.
     if ([System.Diagnostics.EventLog]::SourceExists($evtSource) -eq $false) {
         [System.Diagnostics.EventLog]::CreateEventSource($evtSource, $evtLog)
     }
 
-    # Construire l'événement et l'enregistrer
+    # Construire l'Ã©vÃ©nement et l'enregistrer
     $evtID = New-Object System.Diagnostics.EventInstance($ID,1)
     $evtObject = New-Object System.Diagnostics.EventLog
     $evtObject.Log = $evtLog
@@ -55,26 +55,26 @@ function Write-EventLogV2 {
     $evtObject.WriteEvent($evtID, @("Attack Detected - Fake LLMNR Query has received a response.", "FakeHostname: $hostname","Responder IP: $IP"))
   }
 
-# Boucle principale pour émettre des requêtes aléatoires
+# Boucle principale pour Ã©mettre des requÃªtes alÃ©atoires
 while ($true) {
-    # Sélection aléatoire d'un nom d'hôte
+    # SÃ©lection alÃ©atoire d'un nom d'hÃ´te
     $randomHostname = $hostnames[$(Get-Random -Maximum $hostnames.Length)]
 
-    # Envoi de la requête LLMNR
+    # Envoi de la requÃªte LLMNR
     $LLMNRResponse = Resolve-DnsName -Name $randomHostname -Type A -LlmnrOnly -ErrorAction SilentlyContinue
     
-    # Affichage de la requête dans le terminal
+    # Affichage de la requÃªte dans le terminal
     if ($TerminalOutput) {
         Write-Output "$(Get-Date) - LLMNR Query sent: `"$randomHostname`""
     }
 
-    # Si une réponse est reçue, journaliser
+    # Si une rÃ©ponse est reÃ§ue, journaliser
     if ($LLMNRResponse) {
         # Affichage dans le terminal
         if ($TerminalOutput) {
             Write-Output "$(Get-Date) - LLMNR response received from $($LLMNRResponse.IPAddress)"
         }
-        # Ajout d'une entrée dans les journaux Windows
+        # Ajout d'une entrÃ©e dans les journaux Windows
         Write-EventLogV2 -ID $eventID -hostname $randomHostname -IP $($LLMNRResponse.IPAddress) -evtLog $eventLog -evtSource $logSource
     } else {
         if ($TerminalOutput) {
@@ -82,6 +82,6 @@ while ($true) {
         }
     }
 
-    # Pause aléatoire entre les requêtes
+    # Pause alÃ©atoire entre les requÃªtes
     Start-Sleep -Seconds (Get-Random -Minimum $MinWaitTime -Maximum $MaxWaitTime)
 }
